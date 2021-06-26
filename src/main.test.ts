@@ -47,3 +47,12 @@ test('Generate a date in the future', () => {
     expect(generatedDate).toBeGreaterThanOrEqual(today)
     expect(generatedDate).toBeLessThanOrEqual(sevenDaysLater)
 })
+
+jest.setTimeout(20000)
+test('Generate a company', async() => {
+    
+    const company: string = await factory.company()
+    const notEmpty: boolean = company !== ''
+
+    expect(notEmpty).toBe(true)
+})
