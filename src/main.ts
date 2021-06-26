@@ -43,9 +43,7 @@ export default class MBFactory {
      * @returns: A randomly generated number. 
      */
     number(max: number = 1000000, min: number = 0): number {
-        const seed = Math.random()
-
-        return Math.round((seed * max) + min)
+        return Math.floor(Math.random() * (max-min) + min)
     }
 
     /**

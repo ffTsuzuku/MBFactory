@@ -30,7 +30,7 @@ test('Generate a Date Before or Including Today', () => {
 
 test('Generate a Date Within The Past 10 Days', () => {
     const today = Date.now()
-    let tenDaysAgo: number = (new Date().getDate() - 10)
+    let tenDaysAgo: number = new Date().setDate((new Date().getDate() - 10))
 
 
     const generatedDate = factory.date(today, tenDaysAgo) 
@@ -41,10 +41,9 @@ test('Generate a Date Within The Past 10 Days', () => {
 
 test('Generate a date in the future', () => {
     const today = Date.now()
-    const sevenDaysLater = new Date().getDate() + 7
+    const sevenDaysLater = new Date().setDate(new Date().getDate() + 7)
     const generatedDate = factory.date(sevenDaysLater, today)
 
-    console.log('Seven Days Later', sevenDaysLater)
     expect(generatedDate).toBeGreaterThanOrEqual(today)
     expect(generatedDate).toBeLessThanOrEqual(sevenDaysLater)
 })
