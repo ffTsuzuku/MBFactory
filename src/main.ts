@@ -208,7 +208,8 @@ export default class MBFactory {
     }
 
     /**
-     * GIven 
+     * Generates a random company from the US Stock Market. 
+     * @return: Returns a company name. 
      */
     async company(): Promise<string> {
         return this.fetchEntity(Entities.company)
@@ -247,7 +248,7 @@ export default class MBFactory {
             })
 
             r1.on('error', () => {
-                reject()
+                reject(0)
             })
         })
 
