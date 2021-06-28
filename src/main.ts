@@ -1,11 +1,10 @@
 import * as readLine from 'readline'
 import * as fs from 'fs'
-import { exec } from 'child_process'
 
 enum Entities {
     firstName, 
     lastName,
-    stocks,
+    stock,
     company,
 }
 
@@ -181,7 +180,7 @@ export default class MBFactory {
      * @return {String}: Returns a valid last name
      */
     async lastName(): Promise<string> {
-        const name =  await this.fetchEntity(Entities.lastName)
+        const name: string =  await this.fetchEntity(Entities.lastName)
 
         // Files currently have each line end with a , since its csv
         return name.slice(0, -1)
@@ -212,64 +211,74 @@ export default class MBFactory {
      * GIven 
      */
     async company(): Promise<string> {
-        return await this.fetchEntity(Entities.company)
+        return this.fetchEntity(Entities.company)
     }
     /**
      * Returns an random Entity of a choosen type from datasets. 
      * @param entity: The type of entity to generate
-     * @returns {String}: Returns a valid  entity
+     * @returns: Returns a valid  entity
      */
     async fetchEntity(entity: Entities): Promise<string> {
-        let numberEntities: number = 0;
-
         let dataSource: string = '';
+
         if (entity === Entities.firstName) {
             dataSource = DataSource.firstName
         } else if(entity === Entities.lastName) {
             dataSource = DataSource.lastName
         } else if (entity === Entities.company) {
-            dataSource === DataSource.companies
+            dataSource = DataSource.companies
         }
         
-        // Check how many entities exist in the data source. 
-        await new Promise((resolve, reject) => {
-            exec(`wc -l ${dataSource}`, (error, stdout, stderr) => {
-                
-                if (stdout) {
-                    numberEntities = Number(stdout.split(' ')[0])
-                    resolve(numberEntities)
-                } else {
-                    numberEntities = 0
-                    reject()
-                }
-            })
-        })
-
-        if (numberEntities === 0) {
-            return ''
+        if (dataSource === '') {
+            throw new Error('Unsupported Entity')
         }
 
-        const fileStream = fs.createReadStream(dataSource)
-        const randomNumber = Math.floor(Math.random() * numberEntities)
+        let fileStream = fs.createReadStream(dataSource)
         const r1 = readLine.createInterface(fileStream)
-        let name: string = ''
 
-        let index = 0;
+        const numberofEntities: number =  await new Promise((resolve, reject) => {
+            let lineCount: number = 0
+            r1.on('line', () => {
+                lineCount++
+            })
 
-        r1.on('line', async line => {
-            if (index === randomNumber) {
-                name = line
-                r1.close()
-            }
-            index++
-        })
+            r1.on('close', () => {
+                resolve(lineCount)
+            })
 
-        await new Promise((resolve, reject) => {
-            r1.on('close', data => {
-                resolve(data)
+            r1.on('error', () => {
+                reject()
             })
         })
 
-        return name
+        if (numberofEntities === 0) {
+            throw new Error('Failed to Fetch Entities')
+        }
+
+        fileStream = fs.createReadStream(dataSource)
+        const r2 = readLine.createInterface(fileStream)
+        const entityIndex = Math.floor(Math.random() * numberofEntities)
+
+        const generatedEntity: string = await new Promise((resolve, reject) => {
+            let lineNumber = 0;
+            r2.on('line', line => {
+                if (lineNumber === entityIndex) {
+                    resolve(line)
+                } else {
+                    lineNumber++
+                }
+            })
+            r2.on('close', () => {
+                reject('')
+            }) 
+            r2.on('error', () => {
+                reject('')
+            })
+        })
+        
+        if (generatedEntity === '') {
+            throw new Error('Failed to fetch entity')
+        }
+        return generatedEntity
     }   
 }

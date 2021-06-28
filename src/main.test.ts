@@ -9,13 +9,13 @@ test('Test Generating A Number In Range 0 to 3', () => {
     expect(value).toBeLessThanOrEqual(3)
 })
 
-jest.setTimeout(10000)
+jest.setTimeout(1000000)
+
 test('Generate a first name', async () => {
     const name = await factory.firstName()
     expect(name).not.toEqual('')
 })
 
-jest.setTimeout(10000)
 test('Generate a last name', async () => {
     const name = await factory.lastName()
     expect(name).not.toEqual('')
@@ -48,7 +48,6 @@ test('Generate a date in the future', () => {
     expect(generatedDate).toBeLessThanOrEqual(sevenDaysLater)
 })
 
-jest.setTimeout(20000)
 test('Generate a company', async() => {
     
     const company: string = await factory.company()
