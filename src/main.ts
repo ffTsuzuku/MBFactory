@@ -1,5 +1,6 @@
 import * as readLine from 'readline'
 import * as fs from 'fs'
+import * as pkgUp from 'pkg-up'
 
 enum Entities {
     firstName, 
@@ -8,12 +9,13 @@ enum Entities {
     company,
 }
 
-const  DataSource = {
-    firstName: `${__dirname}/data/first_names.csv`,
-    lastName: `${__dirname}/data/last_names.csv`,
-    stocks: `${__dirname}/data/stocks.csv`,
-    companies:  `${__dirname}/data/companies.csv`
+enum DataSource {
+    firstName = '/data/first_names.csv',
+    lastName = '/data/last_names.csv',
+    stocks = '/data/stocks.csv',
+    companies =  '/data/companies.csv'
 }
+
 /** 
 enum Industries {
     ElectricalProducts = 'Electrical Products',
@@ -220,21 +222,37 @@ export default class MBFactory {
      * @returns: Returns a valid  entity
      */
     async fetchEntity(entity: Entities): Promise<string> {
-        let dataSource: string = '';
+        const packagePath: string | null = await new Promise(async (resolve, reject) => {
+            const path: string | null = await pkgUp()
+
+            if (path != null) {
+                resolve(path)
+            } else {
+                reject(null)
+            }
+        })
+
+        let dataSource: string
+
+        if (packagePath == null) {
+            throw new Error('Failed to locate package.json')
+        } else {
+            dataSource = packagePath.replace(/\\/g, '/')
+            dataSource = dataSource.replace(/\/package.json/g, '')
+        }
 
         if (entity === Entities.firstName) {
-            dataSource = DataSource.firstName
+            dataSource += DataSource.firstName
         } else if(entity === Entities.lastName) {
-            dataSource = DataSource.lastName
+            dataSource += DataSource.lastName
         } else if (entity === Entities.company) {
-            dataSource = DataSource.companies
+            dataSource += DataSource.companies
         }
         
-        if (dataSource === '') {
+        if (dataSource === packagePath) {
             throw new Error('Unsupported Entity')
         }
 
-        console.log(`DirName Test ${__dirname}`)
         let fileStream = fs.createReadStream(dataSource)
         const r1 = readLine.createInterface(fileStream)
 

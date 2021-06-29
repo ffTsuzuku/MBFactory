@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const readLine = require("readline");
 const fs = require("fs");
+const pkgUp = require("pkg-up");
 var Entities;
 (function (Entities) {
     Entities[Entities["firstName"] = 0] = "firstName";
@@ -18,12 +19,13 @@ var Entities;
     Entities[Entities["stock"] = 2] = "stock";
     Entities[Entities["company"] = 3] = "company";
 })(Entities || (Entities = {}));
-const DataSource = {
-    firstName: `${__dirname}/data/first_names.csv`,
-    lastName: `${__dirname}/data/last_names.csv`,
-    stocks: `${__dirname}/data/stocks.csv`,
-    companies: `${__dirname}/data/companies.csv`
-};
+var DataSource;
+(function (DataSource) {
+    DataSource["firstName"] = "/data/first_names.csv";
+    DataSource["lastName"] = "/data/last_names.csv";
+    DataSource["stocks"] = "/data/stocks.csv";
+    DataSource["companies"] = "/data/companies.csv";
+})(DataSource || (DataSource = {}));
 /**
 enum Industries {
     ElectricalProducts = 'Electrical Products',
@@ -228,20 +230,36 @@ class MBFactory {
      */
     fetchEntity(entity) {
         return __awaiter(this, void 0, void 0, function* () {
-            let dataSource = '';
+            const packagePath = yield new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+                const path = yield pkgUp();
+                if (path != null) {
+                    resolve(path);
+                }
+                else {
+                    reject(null);
+                }
+            }));
+            let dataSource;
+            if (packagePath == null) {
+                throw new Error('Failed to locate package.json');
+            }
+            else {
+                dataSource = packagePath.replace(/\\/g, '/');
+                dataSource = dataSource.replace(/\/package.json/g, '');
+            }
             if (entity === Entities.firstName) {
-                dataSource = DataSource.firstName;
+                dataSource += DataSource.firstName;
             }
             else if (entity === Entities.lastName) {
-                dataSource = DataSource.lastName;
+                dataSource += DataSource.lastName;
             }
             else if (entity === Entities.company) {
-                dataSource = DataSource.companies;
+                dataSource += DataSource.companies;
             }
-            if (dataSource === '') {
+            if (dataSource === packagePath) {
                 throw new Error('Unsupported Entity');
             }
-            console.log(`DirName Test ${__dirname}`);
+            console.log(`Data Source: ${dataSource}`);
             let fileStream = fs.createReadStream(dataSource);
             const r1 = readLine.createInterface(fileStream);
             const numberofEntities = yield new Promise((resolve, reject) => {
