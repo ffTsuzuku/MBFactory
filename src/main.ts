@@ -1,6 +1,7 @@
 import * as readLine from 'readline'
 import * as fs from 'fs'
-import * as pkgUp from 'pkg-up'
+//import * as pkgUp from 'pkg-up'
+import pkgUp = require('pkg-up')
 
 enum Entities {
     firstName, 

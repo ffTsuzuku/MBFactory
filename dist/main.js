@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const readLine = require("readline");
 const fs = require("fs");
+//import * as pkgUp from 'pkg-up'
 const pkgUp = require("pkg-up");
 var Entities;
 (function (Entities) {
@@ -259,7 +260,6 @@ class MBFactory {
             if (dataSource === packagePath) {
                 throw new Error('Unsupported Entity');
             }
-            console.log(`Data Source: ${dataSource}`);
             let fileStream = fs.createReadStream(dataSource);
             const r1 = readLine.createInterface(fileStream);
             const numberofEntities = yield new Promise((resolve, reject) => {
