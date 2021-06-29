@@ -232,7 +232,10 @@ class MBFactory {
     fetchEntity(entity) {
         return __awaiter(this, void 0, void 0, function* () {
             const packagePath = yield new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+                const currDir = process.cwd();
+                process.chdir(__dirname);
                 const path = yield pkgUp();
+                process.chdir(currDir);
                 if (path != null) {
                     resolve(path);
                 }

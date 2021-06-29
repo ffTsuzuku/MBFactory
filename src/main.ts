@@ -224,8 +224,11 @@ export default class MBFactory {
      */
     async fetchEntity(entity: Entities): Promise<string> {
         const packagePath: string | null = await new Promise(async (resolve, reject) => {
+            const currDir = process.cwd()
+            process.chdir(__dirname)
             const path: string | null = await pkgUp()
-
+            process.chdir(currDir)
+            
             if (path != null) {
                 resolve(path)
             } else {
