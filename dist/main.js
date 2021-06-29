@@ -214,7 +214,8 @@ class MBFactory {
         return this.number(max, min);
     }
     /**
-     * GIven
+     * Generates a random company from the US Stock Market.
+     * @return: Returns a company name.
      */
     company() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -238,13 +239,11 @@ class MBFactory {
             else if (entity === Entities.company) {
                 dataSource = DataSource.companies;
             }
-            console.log(`DataSource: ${dataSource}`);
             if (dataSource === '') {
                 throw new Error('Unsupported Entity');
             }
             let fileStream = fs.createReadStream(dataSource);
             const r1 = readLine.createInterface(fileStream);
-            console.log('Calc the entity count');
             const numberofEntities = yield new Promise((resolve, reject) => {
                 let lineCount = 0;
                 r1.on('line', () => {
@@ -254,7 +253,7 @@ class MBFactory {
                     resolve(lineCount);
                 });
                 r1.on('error', () => {
-                    reject();
+                    reject(0);
                 });
             });
             if (numberofEntities === 0) {
@@ -263,7 +262,6 @@ class MBFactory {
             fileStream = fs.createReadStream(dataSource);
             const r2 = readLine.createInterface(fileStream);
             const entityIndex = Math.floor(Math.random() * numberofEntities);
-            console.log(`Fetch Me Index ${entityIndex} / ${numberofEntities}`);
             const generatedEntity = yield new Promise((resolve, reject) => {
                 let lineNumber = 0;
                 r2.on('line', line => {
@@ -289,12 +287,3 @@ class MBFactory {
     }
 }
 exports.default = MBFactory;
-function main() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const factory = new MBFactory();
-        // const name: string = await factory.lastName()
-        const entity = yield factory.company();
-        console.log(`Fname: ${entity}`);
-    });
-}
-main();

@@ -1,4 +1,4 @@
-import MBFactory from "./main"
+import MBFactory from "../main"
 
 const factory = new MBFactory()
 
