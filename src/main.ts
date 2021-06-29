@@ -234,6 +234,7 @@ export default class MBFactory {
             throw new Error('Unsupported Entity')
         }
 
+        console.log(`DirName Test ${__dirname}`)
         let fileStream = fs.createReadStream(dataSource)
         const r1 = readLine.createInterface(fileStream)
 

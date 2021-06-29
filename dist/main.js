@@ -242,6 +242,7 @@ class MBFactory {
             if (dataSource === '') {
                 throw new Error('Unsupported Entity');
             }
+            console.log(`DirName Test ${__dirname}`);
             let fileStream = fs.createReadStream(dataSource);
             const r1 = readLine.createInterface(fileStream);
             const numberofEntities = yield new Promise((resolve, reject) => {
