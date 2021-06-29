@@ -18,13 +18,12 @@ var Entities;
     Entities[Entities["stock"] = 2] = "stock";
     Entities[Entities["company"] = 3] = "company";
 })(Entities || (Entities = {}));
-var DataSource;
-(function (DataSource) {
-    DataSource["firstName"] = "./data/first_names.csv";
-    DataSource["lastName"] = "./data/last_names.csv";
-    DataSource["stocks"] = "./data/stocks.csv";
-    DataSource["companies"] = "./data/companies.csv";
-})(DataSource || (DataSource = {}));
+const DataSource = {
+    firstName: `${__dirname}/data/first_names.csv`,
+    lastName: `${__dirname}/data/last_names.csv`,
+    stocks: `${__dirname}/data/stocks.csv`,
+    companies: `${__dirname}/data/companies.csv`
+};
 /**
 enum Industries {
     ElectricalProducts = 'Electrical Products',

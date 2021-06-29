@@ -8,11 +8,11 @@ enum Entities {
     company,
 }
 
-enum DataSource {
-    firstName = './data/first_names.csv',
-    lastName = './data/last_names.csv',
-    stocks = './data/stocks.csv',
-    companies = './data/companies.csv'
+const  DataSource = {
+    firstName: `${__dirname}/data/first_names.csv`,
+    lastName: `${__dirname}/data/last_names.csv`,
+    stocks: `${__dirname}/data/stocks.csv`,
+    companies:  `${__dirname}/data/companies.csv`
 }
 /** 
 enum Industries {
